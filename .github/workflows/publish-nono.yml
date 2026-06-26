@@ -1,0 +1,39 @@
+name: Publish Nono package
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version from package.json
+        id: version
+        run: |
+          set -euo pipefail
+          VERSION=$(jq -r '.version' nono-pack/package.json)
+          if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
+            echo "ERROR: nono-pack/package.json is missing a 'version' field"
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Publish package
+        uses: nono-registry/action@main
+        with:
+          package-name: mistral-vibe
+          package-namespace: sammy-spills
+          version: ${{ steps.version.outputs.version }}
+          path: nono-pack
+          files: |
+            package.json
+            mistral-vibe.profile.json
+            MISTRAL_VIBE.md
