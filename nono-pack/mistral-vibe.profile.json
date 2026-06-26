@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "name": "mistral-vibe",
+  "description": "Mistral Vibe CLI sandbox profile for Nono",
+  "agent": {
+    "model": "mistral-large-latest",
+    "provider": "mistral"
+  },
+  "groups": {
+    "include": ["agent_common", "filesystem_common"]
+  },
+  "filesystem": {
+    "read": ["$HOME"],
+    "write": ["$HOME/.vibe"]
+  },
+  "network": {
+    "allowed_hosts": ["api.mistral.ai"]
+  },
+  "instructions": "You are Vibe, a CLI coding agent by Mistral AI. Follow user instructions precisely."
+}
